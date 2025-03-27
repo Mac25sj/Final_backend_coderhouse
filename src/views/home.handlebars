@@ -1,0 +1,12 @@
+<h1>{{title}}</h1>
+
+<ul>
+    {{#each products}}
+        <li>
+            <strong>{{this.name}}</strong> - ${{this.price}}
+        </li>
+    {{/each}}
+</ul>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>
