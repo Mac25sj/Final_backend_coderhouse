@@ -1,25 +1,13 @@
 import { Router } from "express";
-import CartManager from "../managers/CartManager.js";
+import Controller from "../controller/Controller.js";
 
-const CartRouter = Router();
-const carts = new CartManager();
+const router = Router();
+const controller = new Controller();
 
-CartRouter.post("/", async (req, res) => {
-    res.send(await carts.addCarts());
-});
+router.post("/", controller.createCart);
+router.get("/:id", controller.getCartById);
+router.post("/:cid/products/:pid", controller.addProductToCart);
 
-CartRouter.get("/", async (req, res) => {
-    res.send(await carts.readCarts());
-});
+export default router;
 
-CartRouter.get("/:id", async (req, res) => {
-    res.send(await carts.getCartById(req.params.id));
-});
 
-CartRouter.post('/:cid/products/:pid', async (req, res) => {
-    let cartId = req.params.cid;
-    let productId = req.params.pid;
-    res.send(await carts.addProductInCart(cartId, productId));
-});
-
-export default CartRouter;

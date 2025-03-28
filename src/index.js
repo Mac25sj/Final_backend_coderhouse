@@ -1,54 +1,45 @@
-import express from "express";
-import configureHandlebars from "./config/hbs.js";
-import mongoose from "mongoose";
+import app from "./app.js";
 import { createServer } from "http";
 import { initWebSocket } from "./websockets/websocket.js";
 import ProductManager from "./managers/ProductManager.js";
-import __dirname from "./utils.js";
-import dotenv from 'dotenv';
+import connectDB from "./config/MongoDB.js";
+import detectPort from "detect-port";
+import dotenv from "dotenv";
 dotenv.config();
 
+// Validar variables de entorno
+if (!process.env.MONGO_URI) {
+    console.error("Error: La variable MONGO_URI no está definida.");
+    process.exit(1);
+}
 
-const app = express();
-const PORT = 8080;
-const productManager = new ProductManager();
+// Inicializar la conexión con MongoDB
+connectDB();
 
-// Configuración de middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Detectar un puerto disponible
+detectPort(8080).then((PORT) => {
+    const httpServer = createServer(app);
+    const productManager = new ProductManager();
 
+    // Inicializar WebSocket con manejo de errores
+    try {
+        initWebSocket(httpServer, productManager);
+    } catch (error) {
+        console.error("Error inicializando WebSocket:", error);
+        process.exit(1); // Salir si falla la inicialización
+    }
 
-
-//Mongo Db and Mongoose (ODM)
-// MONGO_URI=mongodb+srv://mac25sj:Coderhouse_1234_Backend@db.ku4ub.mongodb.net/db?retryWrites=true&w=majority&appName=db
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("Mongo DB se ha conectado correctamente");
-  })
-  .catch((err) => console.error(err));
-
-
-// Configuración de Handlebars simple (resto en config)
-configureHandlebars(app); 
-
-// Rutas
-app.get("/", async (req, res) => {
-  const products = await productManager.getProducts();
-  res.render("home", { title: "Lista de Productos", products });
-});
-
-app.get("/realtimeproducts", (req, res) => {
-  res.render("realTimeProducts", { title: "Productos en Tiempo Real" });
-});
-
-
-const httpServer = createServer(app);
-
-// Inicializar WebSocket
-initWebSocket(httpServer, productManager); 
-
-// Iniciar el servidor con mensaje directo al puerto
-httpServer.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    // Iniciar el servidor en el puerto detectado
+    httpServer.listen(PORT, () => {
+        console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    }).on("error", (error) => {
+        if (error.code === "EADDRINUSE") {
+            console.error(`El puerto ${PORT} ya está en uso. Intenta otro puerto.`);
+        } else {
+            console.error("Error al iniciar el servidor:", error);
+        }
+    });
+}).catch((err) => {
+    console.error("Error detectando el puerto:", err);
+    process.exit(1); // Salir si no puede detectar un puerto
 });

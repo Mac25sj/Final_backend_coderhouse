@@ -1,31 +1,6 @@
 Entrega Final
 Objetivos generales
 
-Contarás con Mongo como sistema de persistencia principal
-
-Tendrás definidos todos los endpoints para poder trabajar con productos y carritos.
-
-Objetivos específicos
-
-Profesionalizar las consultas de productos con filtros, paginación y ordenamientos
-
-Profesionalizar la gestión de carrito para implementar los últimos conceptos vistos.
-
-Formato
-
-Link al repositorio de Github, sin la carpeta de node_modules
-
-Sugerencias
-
-Permitir comentarios en el archivo
-
-La lógica del negocio que ya tienes hecha no debería cambiar, sólo su persistencia.
-
-Los nuevos endpoints deben seguir la misma estructura y lógica que hemos seguido.
-
-Video explicativo entrega final: https://drive.google.com/file/d/1nQUXoZ7Oq0uGukaE13PL-E6dM77KjwNv/view?usp=sharing
-
-Se debe entregar
 
 Con base en nuestra implementación actual de productos, modificar el método GET / para que cumpla con los siguientes puntos:
 Deberá poder recibir por query params un limit (opcional), una page (opcional), un sort (opcional) y un query (opcional)

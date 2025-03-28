@@ -1,12 +1,26 @@
-<h1>{{title}}</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealTimeProducts</title>
+    <link rel="stylesheet" href="../public/css/style.css">
+</head>
+<body>
+    <h1>{{title}}</h1>
 
 <form id="productForm">
     <input type="text" id="name" placeholder="Nombre del producto" required>
     <input type="number" id="price" placeholder="Precio" required>
-    <button type="submit">Agregar Producto</button>
+    <input type="text" id="category" placeholder="Categoría del producto" required>
+    <button id="btnAgregarProducto" type="submit">Agregar Producto</button>
 </form>
 
 <ul id="productList" ></ul>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realTimeProducts.js"></script>
+
+    
+</body>
+</html>

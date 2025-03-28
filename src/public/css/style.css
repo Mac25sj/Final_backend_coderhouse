@@ -6,7 +6,20 @@ body{
 
 
 #productList{ background-color: white;
-    font-size: 30px;
+    font-size: 30px;}
 
+
+
+    /* RealTime */
+#btnAgregarProducto{
+    background-color: rgb(204, 187, 31);
+    font-size: 17px;
+    color: white;
 }
 
+/* Home */
+    #TxtlistaHome{background-color: whitesmoke;
+    font-size: 37px;}
+
+    #TxtProducto{border: rgb(202, 39, 39);
+    display: flex;}

@@ -1,8 +1,18 @@
-<h1>{{title}}</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+ <link rel="stylesheet" href="../public/css/style.css">
 
-<ul>
+</head>
+<body>
+    <h1>{{title}}</h1>
+
+    <ul id="TxtlistaHome">
     {{#each products}}
-        <li>
+        <li id="TxtProducto">
             <strong>{{this.name}}</strong> - ${{this.price}}
         </li>
     {{/each}}
@@ -10,3 +20,7 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realTimeProducts.js"></script>
+</body>
+</html>
+
+

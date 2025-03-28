@@ -1,32 +1,14 @@
 import { Router } from "express";
-import ProductManager from "../managers/ProductManager.js";
+import Controller from "../controller/Controller.js";
 
-const productManager = new ProductManager();
-const ProductRouter = Router();
+const router = Router();
+const controller = new Controller();
 
-ProductRouter.get("/:id", async (req, res) => {
-    let id = req.params.id;
-    res.send(await productManager.getProductsById(id));
-});
+router.get("/", controller.getProducts);
+router.get("/:id", controller.getProductById);
+router.post("/", controller.addProduct);
+router.put("/:id", controller.updateProduct);
+router.delete("/:id", controller.deleteProduct);
 
-ProductRouter.get("/", async (req, res) => {
-    res.send(await productManager.getProducts());
-});
+export default router;
 
-ProductRouter.delete("/:id", async (req, res) => {
-    let id = req.params.id;
-    res.send(await productManager.deleteProducts(id));
-});
-
-ProductRouter.put("/:id", async (req, res) => {
-    let id = req.params.id;
-    let updateProduct = req.body;
-    res.send(await productManager.updateProducts(id, updateProduct));
-});
-
-ProductRouter.post("/", async (req, res) => {
-    let newProduct = req.body;
-    res.send(await productManager.addProducts(newProduct));
-});
-
-export default ProductRouter;

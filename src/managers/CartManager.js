@@ -1,4 +1,76 @@
-import { promises as fs } from 'fs';
+import mongoose from "mongoose";
+import Cart from "../models/carts.schema.js";
+import Product from "../models/products.schema.js"; // Asegúrate de que la ruta sea correcta
+
+class CartManager {
+    constructor() {
+        this.model = Cart;
+    }
+
+    async addCart() {
+        try {
+            const newCart = new this.model({ products: [] });
+            await newCart.save();
+            return "Carrito agregado correctamente";
+        } catch (error) {
+            console.error("Error al agregar carrito:", error);
+            return "Error al crear el carrito";
+        }
+    }
+
+    async getCartById(cartId) {
+        try {
+            const cart = await this.model.findById(cartId).populate("products.product");
+            return cart ? cart : "Carrito no encontrado, por favor verificar";
+        } catch (error) {
+            console.error("Error obteniendo carrito:", error);
+            return "Error al buscar carrito";
+        }
+    }
+
+    async addProductInCart(cartId, productId) {
+        try {
+            const cart = await this.model.findById(cartId);
+            if (!cart) return "Carrito no encontrado, por favor verificar";
+
+            const product = await Product.findById(productId);
+            if (!product) return "Producto no encontrado";
+
+            // Verificar si el producto ya está en el carrito
+            const productIndex = cart.products.findIndex(p => p.product.toString() === productId);
+
+            if (productIndex !== -1) {
+                // Si el producto ya existe, aumentar cantidad
+                cart.products[productIndex].quantity++;
+            } else {
+                // Si el producto no está en el carrito, agregarlo
+                cart.products.push({ product: productId, quantity: 1 });
+            }
+
+            await cart.save();
+            return "Producto agregado correctamente al carrito";
+        } catch (error) {
+            console.error("Error agregando producto al carrito:", error);
+            return "Error al agregar producto al carrito";
+        }
+    }
+
+    async deleteCart(cartId) {
+        try {
+            const deletedCart = await this.model.findByIdAndDelete(cartId);
+            return deletedCart ? "Carrito eliminado correctamente" : "Carrito no encontrado";
+        } catch (error) {
+            console.error("Error eliminando carrito:", error);
+            return "Error al eliminar carrito";
+        }
+    }
+}
+
+export default CartManager;
+
+
+
+/*import { promises as fs } from 'fs';
 import { nanoid } from 'nanoid';
 import ProductManager from './ProductManager.js';
 
@@ -6,7 +78,7 @@ const ProductAll = new ProductManager();
 
 class CartManager {
     constructor() {
-        this.path = "./src/models/carts.json";
+        this.path = "./src/db/carts.js";
     }
 
     readCarts = async () => {
@@ -62,3 +134,4 @@ class CartManager {
 }
 
 export default CartManager;
+*/
